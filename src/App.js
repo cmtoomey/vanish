@@ -5,6 +5,8 @@ import Heatmap from "./Heatmap";
 import { csv as requestCSV } from "d3-request";
 import ControlRadioSet from "@mapbox/react-control-radio-set";
 import ControlSwitch from "@mapbox/react-control-switch";
+import buildDates from "./buildDates";
+import demoDates from "./demoDates";
 
 // Set your mapbox token here
 const MAPBOX_TOKEN =
@@ -13,11 +15,8 @@ const MAPBOX_TOKEN =
 const DemoURL =
   "https://raw.githubusercontent.com/cmtoomey/DemoData/master/Demo.csv";
 
-// const BuildURL =
-//   "https://raw.githubusercontent.com/cmtoomey/DemoData/master/Build.csv";
-
-const demoDates = [];
-const buildDates = [];
+const BuildURL =
+  "https://raw.githubusercontent.com/cmtoomey/DemoData/master/Build.csv";
 
 class Root extends Component {
   constructor(props) {
@@ -30,17 +29,22 @@ class Root extends Component {
       },
       data: [],
       type: "COMMERCIAL",
+      datatype: false,
       date: [],
       slide: 10,
       switch: false
     };
 
     requestCSV(DemoURL, (error, response) => {
-      let array = response.map((value, index) => {
+      let filterArray = response.filter(
+        row => row.Category === this.state.type
+      );
+      let results = filterArray.map((value, index) => {
         return [Number(value.Longitude), Number(value.Latitude)];
       });
-      this.setState({ data: array });
+      this.setState({ data: results });
     });
+
   }
 
   componentDidMount() {
@@ -60,6 +64,25 @@ class Root extends Component {
       viewport: { ...this.state.viewport, ...viewport }
     });
   }
+
+  handleDataToggle = (value, id) => {
+    this.setState({ datatype: value });
+    let url;
+    if (!value) {
+      url = DemoURL;
+    } else {
+      url = BuildURL;
+    }
+    requestCSV(url, (error, response) => {
+      let filterArray = response.filter(
+        row => row.Category === this.state.type
+      );
+      let results = filterArray.map((value, index) => {
+        return [Number(value.Longitude), Number(value.Latitude)];
+      });
+      this.setState({ data: results });
+    });
+  };
 
   handleChange = (value, id) => {
     this.setState({ type: value });
@@ -96,6 +119,31 @@ class Root extends Component {
     }
   };
 
+  animate = () => {
+    let url, dates;
+    if (!this.state.datatype) {
+      url = DemoURL;
+      dates = demoDates;
+    } else {
+      url = BuildURL;
+      dates = buildDates;
+    }
+    requestCSV(url, (error, response) => {
+      let filterArray = response.filter(
+        row => row.Category === this.state.type
+      );
+      for (let i = 0; i < dates.length; i++) {
+        setTimeout(() => {
+          let filterDates = filterArray.filter(row => row.Application_Date.substr(6) === dates[i]);
+          let results = filterDates.map(value => {
+            return [Number(value.Longitude), Number(value.Latitude)]
+          });
+          this.setState({data: results});
+        }, 100 * i)
+      }
+    });
+  };
+
   render() {
     const { viewport, data } = this.state;
     let layer;
@@ -120,7 +168,7 @@ class Root extends Component {
             position: "absolute",
             left: 15,
             top: 15,
-            height: 190,
+            height: 210,
             width: 125,
             zIndex: 1,
             backgroundColor: "white",
@@ -156,17 +204,18 @@ class Root extends Component {
             ]}
           />
           <ControlSwitch
+            id="switch-data"
+            label="Toggle Data"
+            onChange={this.handleDataToggle}
+            value={this.state.datatype}
+          />
+          <ControlSwitch
             id="activate-hex"
             label="Hex Mode"
             onChange={this.handleSwitch}
             value={this.state.switch}
           />
-          <button
-            className="btn btn--stroke btn--s"
-            onClick={() => {
-              console.log("yolo");
-            }}
-          >
+          <button className="btn btn--stroke btn--s" onClick={this.animate}>
             ANIMATE
           </button>
         </div>
