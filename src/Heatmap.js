@@ -3,12 +3,12 @@ import React, { Component } from "react";
 import DeckGL, { HexagonLayer } from "deck.gl";
 
 const colorRange = [
-  [1, 152, 189],
-  [73, 227, 206],
-  [216, 254, 181],
-  [254, 237, 177],
-  [254, 173, 84],
-  [209, 55, 78]
+  [1, 152, 189, 255],
+  [73, 227, 206, 255],
+  [216, 254, 181, 255],
+  [254, 237, 177, 255],
+  [254, 173, 84, 255],
+  [209, 55, 78, 255]
 ];
 
 const elevationScale = { min: 1, max: 50 };
@@ -16,7 +16,7 @@ const elevationScale = { min: 1, max: 50 };
 const defaultProps = {
   radius: 175,
   upperPercentile: 100,
-  coverage: 1
+  coverage: .9
 };
 
 export default class DeckGLOverlay extends Component {
@@ -85,27 +85,24 @@ export default class DeckGLOverlay extends Component {
   }
 
   render() {
-    const { viewport, data, radius, coverage, upperPercentile } = this.props;
+    const { viewport, data, radius, coverage } = this.props;
 
-    if (!data) {
-      return null;
-    }
+    // if (!data) {
+    //   return null;
+    // }
 
     const layers = [
       new HexagonLayer({
         id: "heatmap",
-        // colorRange,
+        colorRange,
         coverage,
         data,
         elevationRange: [0, 500],
         elevationScale: this.state.elevationScale,
-        extruded: true,
+        // extruded: true,
         getPosition: d => d,    
-        // onHover: this.props.onHover,
         opacity: 1,
-        // pickable: Boolean(this.props.onHover),
         radius,
-        upperPercentile
       })
     ];
 

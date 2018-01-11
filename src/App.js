@@ -5,6 +5,7 @@ import Heatmap from "./Heatmap";
 import { csv as requestCSV } from "d3-request";
 import ControlRadioSet from "@mapbox/react-control-radio-set";
 import ControlSwitch from "@mapbox/react-control-switch";
+import ControlRange from "@mapbox/react-control-range";
 import buildDates from "./buildDates";
 import demoDates from "./demoDates";
 
@@ -30,9 +31,9 @@ class Root extends Component {
       data: [],
       type: "COMMERCIAL",
       datatype: false,
-      date: [],
-      slide: 10,
-      switch: false
+      date: [demoDates],
+      switch: false,
+      year: 2005
     };
 
     requestCSV(DemoURL, (error, response) => {
@@ -44,7 +45,6 @@ class Root extends Component {
       });
       this.setState({ data: results });
     });
-
   }
 
   componentDidMount() {
@@ -66,13 +66,16 @@ class Root extends Component {
   }
 
   handleDataToggle = (value, id) => {
-    this.setState({ datatype: value });
     let url;
+
     if (!value) {
+      this.setState({ datatype: value, date: demoDates });
       url = DemoURL;
     } else {
+      this.setState({ datatype: value, date: buildDates });
       url = BuildURL;
     }
+
     requestCSV(url, (error, response) => {
       let filterArray = response.filter(
         row => row.Category === this.state.type
@@ -85,13 +88,21 @@ class Root extends Component {
   };
 
   handleChange = (value, id) => {
-    this.setState({ type: value });
-    requestCSV(DemoURL, (error, response) => {
+    let url;
+
+    if (!this.state.datatype) {
+      url = DemoURL;
+    } else {
+      url = BuildURL;
+    }
+
+    requestCSV(url, (error, response) => {
       let filterArray = response.filter(row => row.Category === value);
+      console.log(filterArray.length);
       let results = filterArray.map((value, index) => {
         return [Number(value.Longitude), Number(value.Latitude)];
       });
-      this.setState({ data: results });
+      this.setState({ data: results, type: value });
     });
   };
 
@@ -119,31 +130,6 @@ class Root extends Component {
     }
   };
 
-  animate = () => {
-    let url, dates;
-    if (!this.state.datatype) {
-      url = DemoURL;
-      dates = demoDates;
-    } else {
-      url = BuildURL;
-      dates = buildDates;
-    }
-    requestCSV(url, (error, response) => {
-      let filterArray = response.filter(
-        row => row.Category === this.state.type
-      );
-      for (let i = 0; i < dates.length; i++) {
-        setTimeout(() => {
-          let filterDates = filterArray.filter(row => row.Application_Date.substr(6) === dates[i]);
-          let results = filterDates.map(value => {
-            return [Number(value.Longitude), Number(value.Latitude)]
-          });
-          this.setState({data: results});
-        }, 100 * i)
-      }
-    });
-  };
-
   render() {
     const { viewport, data } = this.state;
     let layer;
@@ -164,10 +150,22 @@ class Root extends Component {
     return (
       <div>
         <div
+          className="prose prose--dark"
+          style={{ position: "absolute", zIndex: 1, left: 15 }}
+        >
+          <h1>Creative Destruction</h1>
+          <p>{!this.state.year ? "All Dates" : this.state.year}</p>
+          <p>
+            {!this.state.datatype
+              ? "Demolition Permits: " + this.state.data.length
+              : "Construction Permits: " + this.state.data.length}
+          </p>
+        </div>
+        <div
           style={{
             position: "absolute",
             left: 15,
-            top: 15,
+            top: 135,
             height: 210,
             width: 125,
             zIndex: 1,
@@ -215,14 +213,21 @@ class Root extends Component {
             onChange={this.handleSwitch}
             value={this.state.switch}
           />
-          <button className="btn btn--stroke btn--s" onClick={this.animate}>
-            ANIMATE
-          </button>
+          <ControlRange
+            id="time"
+            onChange={() => {
+              console.log("next");
+            }}
+            min={0}
+            max={1}
+            step={1}
+          />
         </div>
         <MapGL
           {...viewport}
           onViewportChange={this._onViewportChange.bind(this)}
           mapboxApiAccessToken={MAPBOX_TOKEN}
+          mapStyle="mapbox://styles/mslee/cjc82djfg6rki2rojga31oblf"
         >
           {layer}
         </MapGL>
