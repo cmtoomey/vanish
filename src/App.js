@@ -31,7 +31,7 @@ class Root extends Component {
       data: [],
       type: "COMMERCIAL",
       datatype: false,
-      date: [demoDates],
+      date: demoDates,
       switch: false,
       year: 2005
     };
@@ -40,7 +40,10 @@ class Root extends Component {
       let filterArray = response.filter(
         row => row.Category === this.state.type
       );
-      let results = filterArray.map((value, index) => {
+      let filterDate = filterArray.filter(
+        row => row.Application_Date.substring(6, 10) === String(this.state.year)
+      );
+      let results = filterDate.map((value, index) => {
         return [Number(value.Longitude), Number(value.Latitude)];
       });
       this.setState({ data: results });
@@ -69,10 +72,10 @@ class Root extends Component {
     let url;
 
     if (!value) {
-      this.setState({ datatype: value, date: demoDates });
+      this.setState({ datatype: value, date: demoDates, year: demoDates[0] });
       url = DemoURL;
     } else {
-      this.setState({ datatype: value, date: buildDates });
+      this.setState({ datatype: value, date: buildDates, year: buildDates[0] });
       url = BuildURL;
     }
 
@@ -80,14 +83,17 @@ class Root extends Component {
       let filterArray = response.filter(
         row => row.Category === this.state.type
       );
-      let results = filterArray.map((value, index) => {
+      let filterDate = filterArray.filter(
+        row => row.Application_Date.substring(6, 10) === String(this.state.year)
+      );
+      let results = filterDate.map((value, index) => {
         return [Number(value.Longitude), Number(value.Latitude)];
       });
       this.setState({ data: results });
     });
   };
 
-  handleChange = (value, id) => {
+  handleRadio = (value, id) => {
     let url;
 
     if (!this.state.datatype) {
@@ -98,8 +104,10 @@ class Root extends Component {
 
     requestCSV(url, (error, response) => {
       let filterArray = response.filter(row => row.Category === value);
-      console.log(filterArray.length);
-      let results = filterArray.map((value, index) => {
+      let filterDate = filterArray.filter(
+        row => row.Application_Date.substring(6, 10) === String(this.state.year)
+      );
+      let results = filterDate.map((value, index) => {
         return [Number(value.Longitude), Number(value.Latitude)];
       });
       this.setState({ data: results, type: value });
@@ -129,6 +137,27 @@ class Root extends Component {
       });
     }
   };
+
+  handleSlide = (value) => {
+    let url;
+
+    if (!this.state.datatype) {
+      url = DemoURL;
+    } else {
+      url = BuildURL;
+    }
+
+    requestCSV(url, (error, response) => {
+      let filterArray = response.filter(row => row.Category === this.state.type);
+      let filterDate = filterArray.filter(
+        row => row.Application_Date.substring(6, 10) === String(value)
+      );
+      let results = filterDate.map((value, index) => {
+        return [Number(value.Longitude), Number(value.Latitude)];
+      });
+      this.setState({ data: results, year: value });
+    });
+  } 
 
   render() {
     const { viewport, data } = this.state;
@@ -175,7 +204,7 @@ class Root extends Component {
           }}
         >
           <ControlRadioSet
-            onChange={this.handleChange}
+            onChange={this.handleRadio}
             id="home"
             value={this.state.type}
             options={[
@@ -215,12 +244,11 @@ class Root extends Component {
           />
           <ControlRange
             id="time"
-            onChange={() => {
-              console.log("next");
-            }}
-            min={0}
-            max={1}
+            onChange={this.handleSlide}
+            min={this.state.date[0]}
+            max={2017}
             step={1}
+            value={this.state.year}
           />
         </div>
         <MapGL

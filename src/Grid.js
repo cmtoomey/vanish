@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import DeckGL, {ScreenGridLayer} from 'deck.gl';
+import DeckGL, { ScreenGridLayer } from "deck.gl";
 
 export default class DeckGLOverlay extends Component {
   static get defaultViewport() {
@@ -14,17 +14,17 @@ export default class DeckGLOverlay extends Component {
   }
 
   render() {
-    const { viewport, cellSize, data} = this.props;
+    const { viewport, cellSize, data } = this.props;
 
     if (!data) {
       return null;
     }
-    
+
     const layer = new ScreenGridLayer({
       id: "grid",
       data,
-      minColor: [0, 0, 0, 0],
-      // maxColor: [255,0,129, 255],
+      minColor: [255, 0, 255, 0],
+      // maxColor: [255, 0, 129, 255],
       getPosition: d => d,
       cellSizePixels: cellSize
     });

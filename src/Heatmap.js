@@ -87,9 +87,9 @@ export default class DeckGLOverlay extends Component {
   render() {
     const { viewport, data, radius, coverage } = this.props;
 
-    // if (!data) {
-    //   return null;
-    // }
+    if (!data) {
+      return null;
+    }
 
     const layers = [
       new HexagonLayer({
