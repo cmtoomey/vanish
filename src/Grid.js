@@ -4,9 +4,9 @@ import DeckGL, { ScreenGridLayer } from "deck.gl";
 export default class DeckGLOverlay extends Component {
   static get defaultViewport() {
     return {
-      longitude: -122.333959,
-      latitude: 47.607459,
-      zoom: 10,
+      longitude: -122.40462851623948,
+      latitude: 47.62465150615343,
+      zoom: 10.75,
       maxZoom: 20,
       pitch: 0,
       bearing: 0
@@ -14,17 +14,26 @@ export default class DeckGLOverlay extends Component {
   }
 
   render() {
-    const { viewport, cellSize, data } = this.props;
+    const { viewport, cellSize, data, type } = this.props;
+    let minColor, maxColor;
 
     if (!data) {
       return null;
     }
 
+    if (type === "demo") {
+      minColor = [255, 255, 255, 0];
+      maxColor = [0, 0, 0, 255];
+    } else {
+      minColor = [255, 255, 255, 0];
+      maxColor = [99, 105, 176, 255];
+    }
+
     const layer = new ScreenGridLayer({
       id: "grid",
       data,
-      minColor: [255, 0, 255, 0],
-      // maxColor: [255, 0, 129, 255],
+      minColor: minColor,
+      maxColor: maxColor,
       getPosition: d => d,
       cellSizePixels: cellSize
     });

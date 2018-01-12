@@ -3,12 +3,12 @@ import React, { Component } from "react";
 import DeckGL, { HexagonLayer } from "deck.gl";
 
 const colorRange = [
-  [1, 152, 189, 255],
-  [73, 227, 206, 255],
-  [216, 254, 181, 255],
-  [254, 237, 177, 255],
-  [254, 173, 84, 255],
-  [209, 55, 78, 255]
+  [165, 200, 169, 255],
+  [150, 192, 156, 255],
+  [134, 184, 144, 255],
+  [118, 177, 132, 255],
+  [101, 151, 113, 255],
+  [113, 145, 121, 255]
 ];
 
 const elevationScale = { min: 1, max: 50 };
@@ -26,9 +26,9 @@ export default class DeckGLOverlay extends Component {
 
   static get defaultViewport() {
     return {
-      longitude: -122.333959,
-      latitude: 47.607459,
-      zoom: 9,
+      longitude: -122.40462851623948,
+      latitude: 47.62465150615343,
+      zoom: 10.74,
       minZoom: 5,
       maxZoom: 15,
     };
@@ -97,9 +97,9 @@ export default class DeckGLOverlay extends Component {
         colorRange,
         coverage,
         data,
-        elevationRange: [0, 500],
+        elevationRange: [0, 300],
         elevationScale: this.state.elevationScale,
-        // extruded: true,
+        extruded: true,
         getPosition: d => d,    
         opacity: 1,
         radius,
