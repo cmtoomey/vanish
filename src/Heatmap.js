@@ -2,13 +2,31 @@
 import React, { Component } from "react";
 import DeckGL, { HexagonLayer } from "deck.gl";
 
+const LIGHT_SETTINGS = {
+  lightsPosition: [-122.490263, 47.602755, 1000],
+  ambientRatio: 0.75,
+  diffuseRatio: 0.4,
+  specularRatio: 0.2,
+  lightsStrength: [0.8, 0.0],
+  numberOfLights: 1
+};
+
+// const colorRange = [
+//   [165, 200, 169, 255],
+//   [150, 192, 156, 255],
+//   [134, 184, 144, 255],
+//   [118, 177, 132, 255],
+//   [101, 151, 113, 255],
+//   [113, 145, 121, 255]
+// ];
+
 const colorRange = [
-  [165, 200, 169, 255],
-  [150, 192, 156, 255],
-  [134, 184, 144, 255],
-  [118, 177, 132, 255],
-  [101, 151, 113, 255],
-  [113, 145, 121, 255]
+  [1, 152, 189],
+  [73, 227, 206],
+  [216, 254, 181],
+  [254, 237, 177],
+  [254, 173, 84],
+  [209, 55, 78]
 ];
 
 const elevationScale = { min: 1, max: 50 };
@@ -97,6 +115,7 @@ export default class DeckGLOverlay extends Component {
         colorRange,
         coverage,
         data,
+        lightSettings: LIGHT_SETTINGS,
         elevationRange: [0, 300],
         elevationScale: this.state.elevationScale,
         extruded: true,

@@ -19,7 +19,7 @@ const BuildURL =
   "https://raw.githubusercontent.com/cmtoomey/DemoData/master/Build1.csv";
 
 const CurrentURL =
-  "http://raw.githubusercontent.com/cmtoomey/DemoData/master/Current1.csv";
+  "https://raw.githubusercontent.com/cmtoomey/DemoData/master/Current1.csv";
 
 class Root extends Component {
   constructor(props) {
@@ -79,7 +79,7 @@ class Root extends Component {
           latitude: 47.62465150615343,
           bearing: 0,
           pitch: 0,
-          zoom: 10.75,
+          zoom: 11.07,
           transitionDuration: 1000,
           transitionInterpolator: new FlyToInterpolator()
         }
@@ -93,7 +93,7 @@ class Root extends Component {
           latitude: 47.62465150615343,
           bearing: 0,
           pitch: 0,
-          zoom: 10.75,
+          zoom: 11.07,
           transitionDuration: 1000,
           transitionInterpolator: new FlyToInterpolator()
         }
