@@ -25,8 +25,8 @@ export default class DeckGLOverlay extends Component {
       minColor = [255, 255, 255, 0];
       maxColor = [0, 0, 0, 255];
     } else {
-      minColor = [255, 255, 255, 0];
-      maxColor = [99, 105, 176, 255];
+      minColor = [230, 230, 230, 0];
+      maxColor = [149, 114, 178, 255];
     }
 
     const layer = new ScreenGridLayer({

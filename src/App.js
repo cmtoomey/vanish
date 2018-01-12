@@ -273,7 +273,10 @@ class Root extends Component {
           {...viewport}
           onViewportChange={this._onViewportChange.bind(this)}
           mapboxApiAccessToken={MAPBOX_TOKEN}
-          mapStyle="mapbox://styles/mslee/cjc82djfg6rki2rojga31oblf"
+          // mapStyle="mapbox://styles/mapbox/light-v9"
+          // mapStyle="mapbox://styles/mapbox/dark-v9"
+          // mapStyle="mapbox://styles/mslee/cjc82djfg6rki2rojga31oblf"
+          mapStyle="mapbox://styles/mslee/cjcche7xf094x2rmmsl9f3bsn"
         >
           {layer}
         </ReactMapGL>
