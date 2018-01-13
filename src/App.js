@@ -33,7 +33,8 @@ class Root extends Component {
       date: demoDates,
       datatype: "demo",
       data: [],
-      hex: false
+      hex: false,
+      year: 2000
     };
 
     this.request(DemoURL, "demo");
@@ -82,7 +83,8 @@ class Root extends Component {
           zoom: 11.07,
           transitionDuration: 1000,
           transitionInterpolator: new FlyToInterpolator()
-        }
+        },
+        year: ""
       });
     } else if (value === "build") {
       url = BuildURL;
@@ -96,7 +98,8 @@ class Root extends Component {
           zoom: 11.07,
           transitionDuration: 1000,
           transitionInterpolator: new FlyToInterpolator()
-        }
+        },
+        year: ""
       });
     } else {
       url = CurrentURL;
@@ -107,10 +110,11 @@ class Root extends Component {
           longitude: -122.36586473598015,
           bearing: 41.25,
           pitch: 35.04,
-          zoom: 10.75,
+          zoom: 8.75,
           transitionDuration: 1000,
           transitionInterpolator: new FlyToInterpolator()
-        }
+        },
+        year: ""
       });
     }
     this.request(url, value);
@@ -126,6 +130,7 @@ class Root extends Component {
     requestCSV(url, (error, response) => {
       for (let i = 0; i < this.state.date.length; i++) {
         setTimeout(() => {
+          this.setState({ year: String(this.state.date[i]) });
           let filteredData = response.filter(
             row => row.Year === String(this.state.date[i])
           );
@@ -185,9 +190,20 @@ class Root extends Component {
       );
     } else {
       animateB = (
-        <button className="btn bg-lighten25" onClick={this.animate}>
-          {" "}
-          Animate{" "}
+        <button
+          className="txt-fancy"
+          style={{
+            color: "black",
+            borderStyle: "solid",
+            borderWidth: 2,
+            borderColor: "black",
+            paddingLeft: 15,
+            paddingRight: 15,
+            borderRadius: 8
+          }}
+          onClick={this.animate}
+        >
+          Animate
         </button>
       );
     }
@@ -199,20 +215,16 @@ class Root extends Component {
             position: "absolute",
             left: 15,
             top: 15,
-            height: 220,
-            width: 310,
+            height: 320,
+            width: 325,
             zIndex: 1,
             backgroundColor: "#666",
-            opacity: 0.25,
+            opacity: 0.45,
             borderRadius: 3,
-            padding: 15,
-            borderColor: "white",
-            borderStyle: "solid",
-            borderWidth: 1
+            padding: 15
           }}
         />
         <div
-          className="prose prose--dark"
           style={{
             position: "absolute",
             left: 15,
@@ -220,21 +232,57 @@ class Root extends Component {
             height: 220,
             width: 310,
             zIndex: 1,
-            padding: 15
+            paddingLeft: 15,
+            paddingTop: 15
           }}
         >
-          <h2> Creative Destruction </h2>
-          <h4>
-            {this.state.datatype === "demo"
-              ? this.state.data.length + " activities"
-              : this.state.datatype === "build"
-                ? this.state.data.length + " activities"
-                : this.state.data.length + " activities "}
-          </h4>
+          <div
+            className="txt-fancy txt-h2-mm"
+            style={{ color: "black", paddingBottom: 8 }}
+          >
+            CREATIVE DESTRUCTION
+          </div>
           <span
             style={{
               display: "inline-flex",
-              paddingBottom: 10,
+              paddingBottom: 5,
+              paddingTop: 5,
+              width: "100%",
+              textAlign: "center"
+            }}
+          >
+            <div
+              className="txt-fancy"
+              style={{
+                position: "relative",
+                color: "black",
+                width: "70%",
+                fontSize: 18,
+                textAlign: "left"
+              }}
+            >
+              {this.state.datatype === "demo"
+                ? this.state.data.length + " activities"
+                : this.state.datatype === "build"
+                  ? this.state.data.length + " activities"
+                  : this.state.data.length + " activities "}
+            </div>
+            <div
+              className="txt-fancy"
+              style={{
+                position: "relative",
+                color: "black",
+                width: "30%",
+                fontSize: 18
+              }}
+            >
+              {this.state.year}
+            </div>
+          </span>
+          <span
+            style={{
+              display: "inline-flex",
+              paddingBottom: 8,
               paddingTop: 5,
               width: "100%"
             }}
@@ -244,30 +292,45 @@ class Root extends Component {
               onChange={value => {
                 this.toggle(value);
               }}
-              themeControlSelect="bg-lighten25"
+              themeControlSelect="round-bold border border--2 color-black bg-transparent txt-fancy"
               value={this.state.datatype}
               options={[
                 {
-                  label: "Demolition Permits",
+                  label: "Demolitions",
                   value: "demo"
                 },
                 {
-                  label: "Building Permits",
+                  label: "New Construction",
                   value: "build"
                 },
                 {
-                  label: "Actual Construction",
+                  label: "Active Construction",
                   value: "actual"
                 }
               ]}
             />
             <span
               style={{
-                width: 10
+                paddingLeft: 8,
+                paddingRight: 8
               }}
             />
             {animateB}
           </span>
+          <div style={{height: 20}}/>
+          <svg
+            width="300"
+            height="300"
+            viewBox="0 0 120 120"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <rect x="" y="0" width="6" height="6" />
+            <rect x="0" y="15" width="6" fill="rgb(149, 114, 178)" height="6" />
+            <rect x="0" y="30" width="6" fill="rgb(28, 132, 98)" height="6" />
+            <text x="10" y="5" className="txt-fancy" font-size="6" fill="black">Demolitions</text>
+            <text x="10" y="20" className="txt-fancy" font-size="6" fill="black">New Construction</text>
+            <text x="10" y="35" className="txt-fancy" font-size="6" fill="black">Active Construction</text>
+          </svg>
         </div>
         <ReactMapGL
           {...viewport}
