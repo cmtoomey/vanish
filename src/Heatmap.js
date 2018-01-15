@@ -11,6 +11,7 @@ const LIGHT_SETTINGS = {
   numberOfLights: 1
 };
 
+// This is ours
 const colorRange = [
   [169, 217, 194, 255],
   [129, 203, 170, 255],
@@ -19,11 +20,22 @@ const colorRange = [
   [28, 132, 98, 255]
 ];
 
+//This is their example
+// const colorRange = [
+//   [1, 152, 189],
+//   [73, 227, 206],
+//   [216, 254, 181],
+//   [254, 237, 177],
+//   [254, 173, 84],
+//   [209, 55, 78]
+// ];
+
 const elevationScale = { min: 1, max: 50 };
 
 const defaultProps = {
   radius: 175,
   upperPercentile: 100,
+  // coverage: 1
   coverage: .9
 };
 

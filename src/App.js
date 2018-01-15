@@ -110,7 +110,7 @@ class Root extends Component {
           longitude: -122.36586473598015,
           bearing: 41.25,
           pitch: 35.04,
-          zoom: 8.75,
+          zoom: 10.9,
           transitionDuration: 1000,
           transitionInterpolator: new FlyToInterpolator()
         },
@@ -219,7 +219,7 @@ class Root extends Component {
             width: 325,
             zIndex: 1,
             backgroundColor: "#666",
-            opacity: 0.45,
+            opacity: .75,
             borderRadius: 3,
             padding: 15
           }}
@@ -331,11 +331,12 @@ class Root extends Component {
             <text x="10" y="20" className="txt-fancy" font-size="6" fill="black">New Construction</text>
             <text x="10" y="35" className="txt-fancy" font-size="6" fill="black">Active Construction</text>
           </svg>
-        </div>
+            </div>
         <ReactMapGL
           {...viewport}
           onViewportChange={this._onViewportChange.bind(this)}
           mapboxApiAccessToken={MAPBOX_TOKEN}
+          //These are the progressive map styles
           // mapStyle="mapbox://styles/mapbox/light-v9"
           // mapStyle="mapbox://styles/mapbox/dark-v9"
           // mapStyle="mapbox://styles/mslee/cjc82djfg6rki2rojga31oblf"
